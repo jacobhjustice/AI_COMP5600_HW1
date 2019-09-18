@@ -82,7 +82,6 @@ class QueenMap:
                 newY = y
                 currentScore = tempScore
         self.moveQueen(queen.posX, oldY, queen.posX, newY)
-        self.printQueens() 
 
     
     def printQueens(self):
