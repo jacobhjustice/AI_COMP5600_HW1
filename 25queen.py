@@ -1,3 +1,5 @@
+import random
+
 NUM_QUEENS = 25
 
 class Queen:
@@ -83,7 +85,15 @@ class QueenMap:
                 currentScore = tempScore
         self.moveQueen(queen.posX, oldY, queen.posX, newY)
 
-    
+    def mapScore(self):
+        intersecting = 0
+        for i in range(NUM_QUEENS):
+            q = self.queens[i]
+            score = q.score(self)
+            if score > 0:
+                intersecting += 1
+        return intersecting
+        
     def printQueens(self):
         intersecting = 0
         for i in range(NUM_QUEENS):
@@ -92,8 +102,8 @@ class QueenMap:
             score = q.score(self)
             if score > 0:
                 intersecting += 1
-                if score > 1:
-                    print("ERROR: SHOULD NOT INTERSECT WITH MORE THAN ONE.")
+                # if score > 1:
+                    # print("ERROR: SHOULD NOT INTERSECT WITH MORE THAN ONE.")
         print(str(intersecting) + " total intersecting nodes")
         string = ""
         for x in self.map:
@@ -107,16 +117,23 @@ class QueenMap:
         for queen in self.queens[1:]:
             self.adjustQueen(queen)
 
-qm = QueenMap()
 
-# Create NUM_QUEENS queens, and populate in the map
-for i in range(NUM_QUEENS):
-    q = Queen(i, 0)
-    qm.addQueen(q)
+best = None
+for i in range(100):
+    qm = QueenMap()
 
+    # Create NUM_QUEENS queens, and populate in the map
+    for i in range(NUM_QUEENS):
+        q = Queen(i, random.randint(0, NUM_QUEENS - 1))
+        qm.addQueen(q)
+    qm.optimizeQueens()
+    qm.optimizeQueens()
+    currentScore = qm.mapScore()
+    if best == None or currentScore < best.mapScore():
+        best = qm
 
-qm.optimizeQueens()
-qm.optimizeQueens()
+    # Perfect setup
+    if currentScore == 0:
+        break
 
-
-qm.printQueens()
+best.printQueens()
